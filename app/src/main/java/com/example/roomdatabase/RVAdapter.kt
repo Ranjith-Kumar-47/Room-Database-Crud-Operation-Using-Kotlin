@@ -7,6 +7,7 @@ import android.content.DialogInterface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.materialswitch.MaterialSwitch
 
+private var lastPosition = -1
 class RVAdapter(
     private val arrayList: ArrayList<Student>,
     private val context: Context,
@@ -34,6 +36,7 @@ class RVAdapter(
     }
 
     override fun onBindViewHolder(holder: MyAdapter, position: Int) {
+        setAnimation(holder.itemView,position)
         val student = arrayList[position]
         holder.tvId.text = student.id.toString()
         holder.tvName.text = student.name
@@ -80,7 +83,6 @@ class RVAdapter(
         }
         holder.cardView.setOnLongClickListener(object : View.OnLongClickListener {
             override fun onLongClick(v: View?): Boolean {
-
                 val alertDialog: AlertDialog.Builder = AlertDialog.Builder(context)
                 alertDialog.setTitle("DELETE!").setCancelable(false).setMessage("Sure you want to delete the student ${student.name}?")
                     .setNegativeButton("NO", object : DialogInterface.OnClickListener {
@@ -109,6 +111,14 @@ class RVAdapter(
         val tvPass: TextView = view.findViewById(R.id.tvPass)
         val tvId: TextView = view.findViewById(R.id.tvId)
         val cardView: MaterialCardView = view.findViewById(R.id.cv1)
+    }
+
+    private fun setAnimation(view:View,position: Int){
+        if (position> lastPosition) {
+            val animation = AnimationUtils.loadAnimation(context, android.R.anim.slide_in_left)
+            view.startAnimation(animation)
+            lastPosition = position
+        }
     }
 
 }
